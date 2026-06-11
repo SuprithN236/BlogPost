@@ -35,6 +35,12 @@ export default function Home() {
           >
             New Post
           </Link>
+          <Link
+            to="/profile"
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+          >
+            Profile
+          </Link>
           <button
             onClick={handleLogout}
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"

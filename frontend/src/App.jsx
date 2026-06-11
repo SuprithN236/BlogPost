@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
+import Profile from "./pages/Profile";
 
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem("token");
@@ -29,6 +30,14 @@ export default function App() {
           element={
             <PrivateRoute>
               <CreatePost />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }
         />

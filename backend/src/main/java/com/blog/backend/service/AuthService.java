@@ -40,4 +40,8 @@ public class AuthService {
         String token = jwtUtil.generateToken(existing.getEmail());
         return Map.of("token", token);
     }
+
+    public String getProfile(String token) {
+        return jwtUtil.extractEmail(token);
+    }
 }
