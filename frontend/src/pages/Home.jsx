@@ -18,6 +18,12 @@ export default function Home() {
     navigate("/login");
   };
 
+  const handleDelete = (id) => {
+    api.delete(`/posts/${id}`).then(() => {
+      setPosts(posts.filter((post) => post.id !== id));
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <nav className="bg-white shadow p-4 flex justify-between items-center">
@@ -46,7 +52,15 @@ export default function Home() {
             <div key={post.id} className="bg-white rounded shadow p-6 mb-4">
               <h2 className="text-xl font-bold mb-2">{post.title}</h2>
               <p className="text-gray-600 mb-4">{post.content}</p>
-              <p className="text-sm text-gray-400">By {post.author}</p>
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-400">By {post.author}</p>
+                <button
+                  onClick={() => handleDelete(post.id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))
         )}
