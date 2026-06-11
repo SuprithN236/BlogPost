@@ -4,6 +4,8 @@ import api from "../services/api";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
+  const [comments, setComments] = useState({});
+  const [newComment, setNewComment] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,6 +14,26 @@ export default function Home() {
       .then((res) => setPosts(res.data))
       .catch(() => navigate("/login"));
   }, []);
+
+  const loadComments = (postId) => {
+    api.get(`/posts/${postId}/comments`).then((res) => {
+      setComments((prev) => ({ ...prev, [postId]: res.data }));
+    });
+  };
+
+  const handleAddComment = (postId) => {
+    const content = newComment[postId];
+    if (!content) return;
+    api
+      .post(`/posts/${postId}/comments`, { content, author: "Me" })
+      .then((res) => {
+        setComments((prev) => ({
+          ...prev,
+          [postId]: [...(prev[postId] || []), res.data],
+        }));
+        setNewComment((prev) => ({ ...prev, [postId]: "" }));
+      });
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -58,7 +80,7 @@ export default function Home() {
             <div key={post.id} className="bg-white rounded shadow p-6 mb-4">
               <h2 className="text-xl font-bold mb-2">{post.title}</h2>
               <p className="text-gray-600 mb-4">{post.content}</p>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center mb-4">
                 <p className="text-sm text-gray-400">By {post.author}</p>
                 <div className="flex gap-2">
                   <button
@@ -74,6 +96,54 @@ export default function Home() {
                     Delete
                   </button>
                 </div>
+              </div>
+
+              {/* Comments Section */}
+              <div className="border-t pt-4">
+                {!comments[post.id] ? (
+                  <button
+                    onClick={() => loadComments(post.id)}
+                    className="text-blue-500 text-sm hover:underline"
+                  >
+                    View Comments
+                  </button>
+                ) : (
+                  <div>
+                    <p className="text-sm font-semibold mb-2">Comments</p>
+                    {comments[post.id].length === 0 ? (
+                      <p className="text-sm text-gray-400 mb-2">
+                        No comments yet.
+                      </p>
+                    ) : (
+                      comments[post.id].map((c) => (
+                        <div key={c.id} className="bg-gray-50 rounded p-2 mb-2">
+                          <p className="text-sm">{c.content}</p>
+                          <p className="text-xs text-gray-400">By {c.author}</p>
+                        </div>
+                      ))
+                    )}
+                    <div className="flex gap-2 mt-2">
+                      <input
+                        type="text"
+                        placeholder="Write a comment..."
+                        value={newComment[post.id] || ""}
+                        onChange={(e) =>
+                          setNewComment((prev) => ({
+                            ...prev,
+                            [post.id]: e.target.value,
+                          }))
+                        }
+                        className="border rounded p-1 text-sm flex-1"
+                      />
+                      <button
+                        onClick={() => handleAddComment(post.id)}
+                        className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600"
+                      >
+                        Post
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           ))
