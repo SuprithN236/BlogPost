@@ -1,6 +1,6 @@
 FROM maven:3.9-eclipse-temurin-22 AS build
 WORKDIR /app
-COPY . .
+COPY backend/ .
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:22-jre
