@@ -54,12 +54,20 @@ export default function Home() {
               <p className="text-gray-600 mb-4">{post.content}</p>
               <div className="flex justify-between items-center">
                 <p className="text-sm text-gray-400">By {post.author}</p>
-                <button
-                  onClick={() => handleDelete(post.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
-                >
-                  Delete
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => navigate(`/edit/${post.id}`)}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(post.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))
