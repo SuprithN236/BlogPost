@@ -4,6 +4,7 @@ import com.blog.backend.exception.ResourceNotFoundException;
 import com.blog.backend.model.Post;
 import com.blog.backend.repository.PostRepository;
 import org.springframework.stereotype.Service;
+import com.blog.backend.repository.CommentRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,8 +13,11 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public PostService(PostRepository postRepository) {
+    private final CommentRepository commentRepository;
+
+    public PostService(PostRepository postRepository, CommentRepository commentRepository) {
         this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
     }
 
     public List<Post> getAllPosts() {
@@ -31,6 +35,7 @@ public class PostService {
     }
 
     public void deletePost(Long id) {
+        commentRepository.deleteAll(commentRepository.findByPostId(id));
         postRepository.deleteById(id);
     }
 
